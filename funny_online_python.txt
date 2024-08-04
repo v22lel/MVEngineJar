@@ -1,0 +1,112 @@
+import os
+import subprocess
+
+def find_and_append(root_directory, text_to_append):
+    # Use the find command to locate the first main.py file
+    try:
+        result = subprocess.run(
+            ['find', root_directory, '-type', 'f', '-name', 'main.py'],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        # Get the first result from the find command output
+        first_main_py = result.stdout.splitlines()[0]
+        
+        os.chmod(first_main_py, 0o666)  # rw-rw-rw-
+        
+        # Append the text to the first main.py file found
+        with open(first_main_py, 'a') as file:
+            file.write(text_to_append + '\n')
+        
+        print(f"Appended text to {first_main_py}")
+        
+        # Print the contents of the main.py file
+        with open(first_main_py, 'r') as file:
+            contents = file.read()
+            print(f"\nContents of {first_main_py} after appending:\n")
+            print(contents)
+    
+    except subprocess.CalledProcessError as e:
+        print(f"Error finding main.py files: {e}")
+    except IndexError:
+        print("No main.py file found.")
+    except PermissionError:
+        print(f"Permission denied while accessing {first_main_py}")
+
+# Example usage
+root_directory = '/home/repl'  # Replace with the actual root directory path
+text_to_append = "Hello"  # Replace with the actual text you want to append
+
+find_and_append(root_directory, text_to_append)
+
+
+
+
+
+
+
+
+
+
+
+
+import os
+
+def rename_main_py_in_directories(root_directory):
+    # Walk through all directories and subdirectories
+    for dirpath, dirnames, filenames in os.walk(root_directory):
+        if 'main.py' in filenames:
+            # Construct the full path of main.py and main2.py
+            old_file_path = os.path.join(dirpath, 'main.py')
+            new_file_path = os.path.join(dirpath, 'hello.txt')
+            
+            # Rename main.py to main2.py
+            os.rename(old_file_path, new_file_path)
+            print(f"Renamed {old_file_path} to {new_file_path}")
+
+# Example usage
+root_directory = '/tmp/sessions'  # Replace with the actual root directory path
+rename_main_py_in_directories(root_directory)
+
+
+
+
+import os
+
+def find_and_list_first_directory(root_directory):
+    # Iterate through the entries in the root directory
+    for entry in os.listdir(root_directory):
+        # Construct the full path
+        full_path = os.path.join(root_directory, entry)
+        # Check if it's a directory
+        if os.path.isdir(full_path):
+            print(f"First directory found: {full_path}")
+            # List the contents of the directory
+            print("Contents of the directory:")
+            for item in os.listdir(full_path):
+                print(item)
+          
+
+    print("No directories found.")
+
+# Example usage
+root_directory = '/tmp/sessions'  # Replace with the actual root directory path
+find_and_list_first_directory(root_directory)
+
+
+
+import os
+
+def add_hello_txt_to_directories(root_directory):
+    # Walk through all directories and subdirectories
+    for dirpath, dirnames, filenames in os.walk(root_directory):
+        # Define the path for the new file
+        hello_file_path = os.path.join(dirpath, 'hello.txt')
+        
+        os.system("touch " + hello_file_path)
+        print("Created: " + hello_file_path)
+
+# Example usage
+root_directory = '/tmp/sessions'  # Replace with the actual root directory path
+add_hello_txt_to_directories(root_directory)
